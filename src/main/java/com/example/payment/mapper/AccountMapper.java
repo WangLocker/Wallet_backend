@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface AccountMapper {
 
-    @Insert("INSERT INTO bank_accounts (id, user_id, bank_id, account_number, is_verified, is_primary) VALUES (#{id}, #{userId}, #{bankId}, #{accountNumber}, #{isVerified}, #{isPrimary})")
+    @Insert("INSERT INTO bank_accounts (user_id, bank_id, account_number, is_verified, is_primary) VALUES (#{userId}, #{bankId}, #{accountNumber}, #{isVerified}, #{isPrimary})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertAccount(Account account);
 

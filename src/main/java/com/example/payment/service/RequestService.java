@@ -1,13 +1,12 @@
 package com.example.payment.service;
 
-import com.example.payment.entity.Email;
-import com.example.payment.entity.Payment;
-import com.example.payment.entity.Phone;
+import com.example.payment.entity.*;
 import com.example.payment.mapper.*;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class RequestService {
@@ -17,20 +16,24 @@ public class RequestService {
     private final EmailMapper emailMapper;
     private final RequestMapper requestMapper;
     private final PaymentMapper paymentMapper;
+    private final AccountMapper accountMapper;
 
-    public RequestService(UserMapper userMapper, PhoneMapper phoneMapper, EmailMapper emailMapper, RequestMapper requestMapper, PaymentMapper paymentMapper) {
+    public RequestService(UserMapper userMapper, PhoneMapper phoneMapper, EmailMapper emailMapper, RequestMapper requestMapper, PaymentMapper paymentMapper, AccountMapper accountMapper) {
         this.userMapper = userMapper;
         this.phoneMapper = phoneMapper;
         this.emailMapper = emailMapper;
         this.requestMapper = requestMapper;
         this.paymentMapper = paymentMapper;
+        this.accountMapper = accountMapper;
     }
 
 
-    public int paymentCheckAndInsert(Integer senderId, String recipientEmailOrPhone, String recipientType, Double amount, String memo) {
-        if (userMapper.getUserById(senderId) == null) {
+    public int paymentCheckAndInsert(String senderName, String recipientEmailOrPhone, String recipientType, Double amount, String memo) {
+
+        if (userMapper.getUserByName(senderName) == null) {
             return -1; // sender not found
         }
+        int senderId = userMapper.getUserByName(senderName).getId();
         int recipientId = -1;
         if (recipientType.equals("phone")) {
             Phone phone = phoneMapper.getPhoneByNumber(recipientEmailOrPhone);
@@ -54,6 +57,22 @@ public class RequestService {
         payment.setMemo(memo);
         payment.setStatus("pending");
         paymentMapper.insertPayment(payment);
+        return 0;
+    }
+
+    public int addCard(String userName, String bankId, String accountNum) {
+        User user = userMapper.getUserByName(userName);
+        if (user == null) return -1;
+        Integer userId = user.getId();
+        Account account = new Account();
+        account.setVerified(false);
+        account.setAccountNumber(accountNum);
+        account.setBankId(bankId);
+        account.setUserId(userId);
+        List<Account> accounts = accountMapper.getAccountsByUserId(userId);
+        if (accounts.isEmpty()) account.setPrimary(true);
+        else account.setPrimary(false);
+        accountMapper.insertAccount(account);
         return 0;
     }
 }

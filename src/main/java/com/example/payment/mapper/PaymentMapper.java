@@ -21,6 +21,9 @@ public interface PaymentMapper {
     @Select("SELECT * FROM payments WHERE recipient_id = #{recipientId}")
     List<Payment> getPaymentsOfRecipient(Integer recipientId);
 
+    @Select("SELECT * FROM payments WHERE id = #{id}")
+    Payment getPaymentOfId(Integer id);
+
 
 
 }

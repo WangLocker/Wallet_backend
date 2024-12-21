@@ -1,5 +1,6 @@
 package com.example.payment.mapper;
 
+import com.example.payment.entity.Payment;
 import com.example.payment.entity.Request;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -22,6 +23,7 @@ public interface RequestMapper {
     @Select("SELECT * FROM requests WHERE recipient_id = #{recipientId}")
     List<Request> getRequestsOfRecipient(Integer recipientId);
 
-
+    @Select("SELECT * FROM requests WHERE id = #{id}")
+    Request getRequestOfId(Integer id);
 
 }
