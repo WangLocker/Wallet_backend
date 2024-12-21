@@ -93,4 +93,25 @@ public class AuthController {
         }
     }
 
+    /**
+     * 退出登陆
+     * @return 200
+     */
+    @CrossOrigin(origins =  "*")
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return ResponseEntity.ok("Logout successful!");
+    }
+
+    @CrossOrigin(origins =  "*")
+    @PostMapping("/verifyCardStatus")
+    public ResponseEntity<?> verifyCardStatus(@RequestBody String cardNumber) {
+        boolean status = authService.verifyAccount(cardNumber);
+        if (status) {
+            return ResponseEntity.ok("Card verified");
+        }
+        else {
+            return ResponseEntity.status(201).body("No such card exists");
+        }
+    }
 }

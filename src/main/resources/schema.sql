@@ -49,25 +49,18 @@ CREATE TABLE IF NOT EXISTS payments (
 
 
 CREATE TABLE IF NOT EXISTS requests (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+--    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER,
     requester_id INTEGER NOT NULL,
     recipient_id INTEGER,
     recipient_email_or_phone TEXT CHECK (length(recipient_email_or_phone) <= 100),
     amount REAL NOT NULL CHECK (amount > 0),
+    total_amount REAL NOT NULL CHECK (total_amount > 0),
     memo TEXT,
     status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'cancelled')),
     initiated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     completed_at DATETIME,
     FOREIGN KEY (requester_id) REFERENCES users(id),
-    FOREIGN KEY (recipient_id) REFERENCES users(id)
-);
-
-CREATE TABLE IF NOT EXISTS request_split (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    request_id INTEGER NOT NULL,
-    recipient_id INTEGER,
-    amount REAL NOT NULL CHECK (amount > 0),
-    FOREIGN KEY (request_id) REFERENCES requests(id),
     FOREIGN KEY (recipient_id) REFERENCES users(id)
 );
 
