@@ -1,8 +1,10 @@
 package com.example.payment.service;
 
+import com.example.payment.entity.Account;
 import com.example.payment.entity.User;
 import com.example.payment.entity.Phone;
 import com.example.payment.entity.Email;
+import com.example.payment.mapper.AccountMapper;
 import com.example.payment.mapper.EmailMapper;
 import com.example.payment.mapper.PhoneMapper;
 import com.example.payment.mapper.UserMapper;
@@ -17,11 +19,13 @@ public class AuthService {
     private final UserMapper userMapper;
     private final PhoneMapper phoneMapper;
     private final EmailMapper emailMapper;
+    private final AccountMapper accountMapper;
 
-    public AuthService(UserMapper userMapper, PhoneMapper phoneMapper, EmailMapper emailMapper) {
+    public AuthService(UserMapper userMapper, PhoneMapper phoneMapper, EmailMapper emailMapper, AccountMapper accountMapper) {
         this.userMapper = userMapper;
         this.phoneMapper = phoneMapper;
         this.emailMapper = emailMapper;
+        this.accountMapper = accountMapper;
     }
 
     /**
@@ -108,6 +112,13 @@ public class AuthService {
         phoneMapper.insertPhone(phoneEntity);
 
         return 0;
+    }
+
+    public boolean verifyAccount(String accountNumber) {
+        Account account = accountMapper.getAccountByAccountNumber(accountNumber);
+        if (account == null) return false;
+        account.setVerified(true);
+        return true;
     }
 
 }
