@@ -1,6 +1,7 @@
 package com.example.payment.controller;
 
 import com.example.payment.entity.Account;
+import com.example.payment.entity.User;
 import com.example.payment.service.QueryService;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +21,14 @@ public class QueryController {
 
     /**
      * 处理查询用户账户请求
-     * @param userId 用户 ID
+     * @param userName 用户名
      * @return 用户账户
      */
     @CrossOrigin(origins = "*")
     @PostMapping("/getCardData")
-    public ResponseEntity<?> queryUserAccounts(@RequestBody Integer userId) {
+    public ResponseEntity<?> queryUserAccounts(@RequestBody String userName) {
+        Integer userId = queryService.getUserId(userName);
+        if (userId == null) return ResponseEntity.status(202).body("No such user");
         List<Account> cardList = queryService.getUserCard(userId);
         List list = new ArrayList();
         for (Account account : cardList) {
@@ -56,7 +59,9 @@ public class QueryController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/getMonthlyStats")
-    public ResponseEntity<?> queryMonthlyStats(@RequestBody Integer userId) {
+    public ResponseEntity<?> queryMonthlyStats(@RequestBody String userName) {
+        Integer userId = queryService.getUserId(userName);
+        if (userId == null) return ResponseEntity.status(202).body("No such user");
         List<Double> result = queryService.getUserMonthlyData(userId);
         return ResponseEntity.ok(result);
     }
@@ -75,10 +80,33 @@ public class QueryController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/getTransactionData")
-    public ResponseEntity<?> queryTransactionData(@RequestBody Integer userId) {
+    public ResponseEntity<?> queryTransactionData(@RequestBody String userName) {
+        Integer userId = queryService.getUserId(userName);
+        if (userId == null) return ResponseEntity.status(202).body("No such user");
         List<Map<String, String>> result = queryService.getTransactionData(userId);
         return ResponseEntity.ok(result);
     }
+
+    @CrossOrigin(origins =  "*")
+    @PostMapping("/getRequest")
+    public ResponseEntity<?> queryRequest(@RequestBody String userName) {
+        Integer userId = queryService.getUserId(userName);
+        if (userId == null) return ResponseEntity.status(202).body("No such user");
+        List<Map<String, String>> result = queryService.getPendingRequests(userId);
+        return ResponseEntity.ok(result);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/getDetail")
+    public ResponseEntity<?> queryDetail(@RequestBody Map<?, ?> info) {
+        String transNum = (String) info.get("transNum");
+        Map<String, String> result = queryService.getTransDetail(transNum);
+        if (result == null) return ResponseEntity.status(201).body("Error");
+        else return ResponseEntity.ok(result);
+    }
+
+
+
 
 
 
