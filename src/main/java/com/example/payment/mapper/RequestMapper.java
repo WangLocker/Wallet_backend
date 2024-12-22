@@ -2,17 +2,14 @@ package com.example.payment.mapper;
 
 import com.example.payment.entity.Payment;
 import com.example.payment.entity.Request;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
 public interface RequestMapper {
 
-    @Insert("INSERT INTO requests (id, requester_id, recipient_id, recipient_email_or_phone, amount, total_amount, memo, status, initiated_at, completed_at) VALUES (#{id}, #{requesterId}, #{recipientId}, #{recipientEmailOrPhone}, #{amount}, #{totalAmount}, #{memo}, #{status}, #{initiatedAt}, #{completed_at})")
+    @Insert("INSERT INTO requests (id, requester_id, recipient_id, recipient_email_or_phone, amount, total_amount, memo, status) VALUES (#{id}, #{requesterId}, #{recipientId}, #{recipientEmailOrPhone}, #{amount}, #{totalAmount}, #{memo}, #{status}")
     void insertRequest(Request request);
 //    @Options(useGeneratedKeys = true, keyProperty = "id")
 
@@ -25,5 +22,8 @@ public interface RequestMapper {
 
     @Select("SELECT * FROM requests WHERE id = #{id}")
     Request getRequestOfId(Integer id);
+
+    @Update("UPDATE requests SET status = 'completed', completed_at = CURRENT_TIMESTAMP WHERE id = #{id} AND requester_id = #{requesterId} AND recipient_id = #{recipientId}")
+    void completeRequest(Integer id, Integer requesterId, Integer recipientId);
 
 }

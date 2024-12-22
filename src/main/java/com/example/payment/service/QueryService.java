@@ -128,8 +128,8 @@ public class QueryService {
             if (request.getStatus().equals("pending")) {
                 Map<String, String> tempTrans = new HashMap<>();
                 tempTrans.put("t_id", String.valueOf(request.getId()));
-                tempTrans.put("t_requester_id", String.valueOf(request.getRequesterId()));
-                tempTrans.put("t_recipient_id", String.valueOf(request.getRecipientId()));
+                tempTrans.put("t_requester_id", String.valueOf(userMapper.getUserById(request.getRequesterId()).getName()));
+                tempTrans.put("t_recipient_id", String.valueOf(userMapper.getUserById(request.getRecipientId()).getName()));
                 tempTrans.put("t_amount", String.valueOf(request.getAmount()));
                 tempTrans.put("t_memo", String.valueOf(request.getMemo()));
                 pendingRequests.add(tempTrans);
@@ -139,8 +139,8 @@ public class QueryService {
             if (request.getStatus().equals("pending")) {
                 Map<String, String> tempTrans = new HashMap<>();
                 tempTrans.put("t_id", String.valueOf(request.getId()));
-                tempTrans.put("t_requester_id", String.valueOf(request.getRequesterId()));
-                tempTrans.put("t_recipient_id", String.valueOf(request.getRecipientId()));
+                tempTrans.put("t_requester_id", String.valueOf(userMapper.getUserById(request.getRequesterId()).getName()));
+                tempTrans.put("t_recipient_id", String.valueOf(userMapper.getUserById(request.getRecipientId()).getName()));
                 tempTrans.put("t_amount", String.valueOf(request.getAmount()));
                 tempTrans.put("t_memo", String.valueOf(request.getMemo()));
                 pendingRequests.add(tempTrans);
