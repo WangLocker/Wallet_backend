@@ -174,7 +174,7 @@ public class QueryService {
             queryForm.put("q_memo", request.getMemo());
             queryForm.put("q_status", request.getStatus());
             queryForm.put("q_initiated_at", request.getInitiatedAt().toString());
-            queryForm.put("q_completed_at", request.getCompletedAt().toString());
+            queryForm.put("q_completed_at", request.getCompletedAt() == null ? "" : request.getCompletedAt().toString());
         }
         return queryForm;
     }
