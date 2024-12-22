@@ -82,7 +82,6 @@ public class QueryController {
     @CrossOrigin(origins = "*")
     @PostMapping("/getTransactionData")
     public ResponseEntity<?> queryTransactionData(@RequestBody String userName) {
-        userName = userName.substring(1, userName.length() - 1);
         Integer userId = queryService.getUserId(userName);
         if (userId == null) return ResponseEntity.status(202).body("No such user");
         List<Map<String, String>> result = queryService.getTransactionData(userId);

@@ -146,7 +146,9 @@ public class RequestService {
         request.setStatus("pending");
         request.setInitiatedAt(new Date());
 
+        System.out.println(request.toString());
         requestMapper.insertRequest(request);
+        System.out.println("insert success");
 
         tempForm.put("f_id", request.getId().toString());
         tempForm.put("f_requester_id", requesterName);
@@ -165,7 +167,9 @@ public class RequestService {
                 request.setRecipientEmailOrPhone((String) extraPayer.get("infofetchee"));
                 request.setAmount(Double.parseDouble((String) extraPayer.get("amount")));
 
+                System.out.println(request.toString());
                 requestMapper.insertRequest(request);
+                System.out.println("insert success");
 
                 Map<String, String> nowExtra = new HashMap<>();
                 nowExtra.put("f_id", request.getRequesterId().toString());
