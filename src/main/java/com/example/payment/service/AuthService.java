@@ -97,6 +97,8 @@ public class AuthService {
         user.setPassword(hashedPassword);
         userMapper.insertUser(user);
 
+        user.setId(userMapper.getUserByName(name).getId());
+
         // Insert email into the email table
         Email emailEntity = new Email();
         emailEntity.setUserId(user.getId());
