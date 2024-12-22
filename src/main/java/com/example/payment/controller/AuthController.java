@@ -114,7 +114,7 @@ public class AuthController {
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, String> requestMap = objectMapper.readValue(cardNumber, Map.class);
             String Number = requestMap.get("cardNum");
-            boolean status = authService.verifyAccount(cardNumber);
+            boolean status = authService.verifyAccount(Number);
             if (status) {
                 return ResponseEntity.ok("Card verified");
             }
