@@ -135,17 +135,17 @@ public class QueryService {
                 pendingRequests.add(tempTrans);
             }
         }
-        for (Request request : requesterList) {
-            if (request.getStatus().equals("pending")) {
-                Map<String, String> tempTrans = new HashMap<>();
-                tempTrans.put("t_id", String.valueOf(request.getId()));
-                tempTrans.put("t_requester_id", String.valueOf(userMapper.getUserById(request.getRequesterId()).getName()));
-                tempTrans.put("t_recipient_id", String.valueOf(userMapper.getUserById(request.getRecipientId()).getName()));
-                tempTrans.put("t_amount", String.valueOf(request.getAmount()));
-                tempTrans.put("t_memo", String.valueOf(request.getMemo()));
-                pendingRequests.add(tempTrans);
-            }
-        }
+//        for (Request request : requesterList) {
+//            if (request.getStatus().equals("pending")) {
+//                Map<String, String> tempTrans = new HashMap<>();
+//                tempTrans.put("t_id", String.valueOf(request.getId()));
+//                tempTrans.put("t_requester_id", String.valueOf(userMapper.getUserById(request.getRequesterId()).getName()));
+//                tempTrans.put("t_recipient_id", String.valueOf(userMapper.getUserById(request.getRecipientId()).getName()));
+//                tempTrans.put("t_amount", String.valueOf(request.getAmount()));
+//                tempTrans.put("t_memo", String.valueOf(request.getMemo()));
+//                pendingRequests.add(tempTrans);
+//            }
+//        }
         return pendingRequests;
     }
 
@@ -174,7 +174,7 @@ public class QueryService {
             queryForm.put("q_memo", request.getMemo());
             queryForm.put("q_status", request.getStatus());
             queryForm.put("q_initiated_at", request.getInitiatedAt().toString());
-            queryForm.put("q_completed_at", request.getCompletedAt().toString());
+            queryForm.put("q_completed_at", request.getCompletedAt() == null ? "" : request.getCompletedAt().toString());
         }
         return queryForm;
     }
