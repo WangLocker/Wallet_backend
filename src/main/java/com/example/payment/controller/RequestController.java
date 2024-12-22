@@ -2,7 +2,6 @@ package com.example.payment.controller;
 
 import com.example.payment.service.RequestService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;

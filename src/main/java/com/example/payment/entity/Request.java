@@ -3,7 +3,6 @@ package com.example.payment.entity;
 import java.util.Date;
 
 public class Request {
-    private static Integer currentIdNum = 0;
     private Integer id;
     private Integer requesterId;
     private Integer recipientId;
@@ -18,14 +17,6 @@ public class Request {
     public Request() {
         this.status = "pending";
         this.initiatedAt = new Date();
-    }
-
-    public static Integer getCurrentIdNum() {
-        return currentIdNum;
-    }
-
-    public static void addCurrentIdNum() {
-        currentIdNum ++;
     }
 
     public Integer getId() {

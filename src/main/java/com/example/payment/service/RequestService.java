@@ -134,10 +134,8 @@ public class RequestService {
         }
 
         // add form
-        Request.addCurrentIdNum();
         Request request = new Request();
         request.setRequesterId(requester.getId());
-        request.setId(Request.getCurrentIdNum());
         request.setRecipientId(primaryRecipientId);
         request.setRecipientEmailOrPhone((String) fetchForm.get("infofetchee"));
         request.setAmount(Double.parseDouble((String) fetchForm.get("amount")));
@@ -150,7 +148,7 @@ public class RequestService {
         requestMapper.insertRequest(request);
         System.out.println("insert success");
 
-        tempForm.put("f_id", request.getId().toString());
+        tempForm.put("f_id", " ");
         tempForm.put("f_requester_id", requesterName);
         tempForm.put("f_recipient_id", userMapper.getUserById(primaryRecipientId).getName());
         tempForm.put("f_recipient_email_or_phone", request.getRecipientEmailOrPhone());
@@ -172,7 +170,7 @@ public class RequestService {
                 System.out.println("insert success");
 
                 Map<String, String> nowExtra = new HashMap<>();
-                nowExtra.put("f_id", request.getRequesterId().toString());
+                nowExtra.put("f_id", " ");
                 nowExtra.put("f_requester_id", requesterName);
                 nowExtra.put("f_recipient_id", userMapper.getUserById(currentRecipientId).getName());
                 nowExtra.put("f_amount", request.getAmount().toString());
