@@ -2,6 +2,9 @@ package com.example.payment.controller;
 
 import com.example.payment.service.AuthService;
 import com.example.payment.util.RSAUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -106,11 +109,18 @@ public class AuthController {
     @CrossOrigin(origins =  "*")
     @PostMapping("/verifyCardStatus")
     public ResponseEntity<?> verifyCardStatus(@RequestBody String cardNumber) {
-        boolean status = authService.verifyAccount(cardNumber);
-        if (status) {
-            return ResponseEntity.ok("Card verified");
-        }
-        else {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, String> requestMap = objectMapper.readValue(cardNumber, Map.class);
+            String Number = requestMap.get("cardNum");
+            boolean status = authService.verifyAccount(cardNumber);
+            if (status) {
+                return ResponseEntity.ok("Card verified");
+            }
+            else {
+                return ResponseEntity.status(201).body("No such card exists");
+            }
+        } catch (Exception e) {
             return ResponseEntity.status(201).body("No such card exists");
         }
     }
