@@ -70,7 +70,7 @@ public class RequestController {
         Map<?, ?> fetchForm = (Map<?, ?>) form.get("fetchForm");
         Map fetchOutForm = requestService.submitFetch(userName, fetchForm);
         if (fetchOutForm == null) return ResponseEntity.status(201).body("user not found");
-        else return ResponseEntity.ok(fetchForm);
+        else return ResponseEntity.ok(fetchOutForm);
     }
 
     @CrossOrigin(origins = "*")
@@ -80,7 +80,7 @@ public class RequestController {
         Map<?, ?> fetchForm = (Map<?, ?>) form.get("fetchForm");
         Map fetchOutForm = requestService.submitFetch(userName, fetchForm);
         if (fetchOutForm == null) return ResponseEntity.status(201).body("user not found");
-        else return ResponseEntity.ok(fetchForm);
+        else return ResponseEntity.ok(fetchOutForm);
     }
 
 }
