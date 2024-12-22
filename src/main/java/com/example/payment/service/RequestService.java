@@ -98,7 +98,7 @@ public class RequestService {
         if (recipient == null) return -3;
         Integer recipientId = recipient.getId();
         Integer requesterId = requester.getId();
-        requestMapper.completeRequest(requesterId, requesterId, recipientId);
+        requestMapper.completeRequest(requestId, requesterId, recipientId);
         return 0;
     }
 
