@@ -103,6 +103,7 @@ public class AuthController {
     @CrossOrigin(origins =  "*")
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestBody String userName) {
+        userName = userName.substring(1, userName.length() - 1);
         return ResponseEntity.ok("Logout successful!");
     }
 
