@@ -18,5 +18,8 @@ public interface AccountMapper {
     @Select("SELECT * FROM bank_accounts WHERE account_number = #{accountNumber}")
     Account getAccountByAccountNumber(String accountNumber);
 
+    @Update("UPDATE bank_accounts SET is_verified = 1 WHERE account_number = #{accountNumber}")
+    void updateAccountVerified(String accountNumber);
+
 
 }

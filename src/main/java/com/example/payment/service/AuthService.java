@@ -120,6 +120,7 @@ public class AuthService {
         Account account = accountMapper.getAccountByAccountNumber(accountNumber);
         if (account == null) return false;
         account.setVerified(true);
+        accountMapper.updateAccountVerified(accountNumber);
         return true;
     }
 
