@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface RequestMapper {
 
-    @Insert("INSERT INTO requests (id, requester_id, recipient_id, recipient_email_or_phone, amount, total_amount, memo, status) VALUES (#{id}, #{requesterId}, #{recipientId}, #{recipientEmailOrPhone}, #{amount}, #{totalAmount}, #{memo}, #{status}")
+    @Insert("INSERT INTO requests (id, requester_id, recipient_id, recipient_email_or_phone, amount, total_amount, memo, status) VALUES (#{id}, #{requesterId}, #{recipientId}, #{recipientEmailOrPhone}, #{amount}, #{totalAmount}, #{memo}, #{status})")
     void insertRequest(Request request);
 //    @Options(useGeneratedKeys = true, keyProperty = "id")
 
