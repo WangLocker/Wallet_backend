@@ -107,4 +107,20 @@ public class Request {
     public void setCompletedAt(Date completedAt) {
         this.completedAt = completedAt;
     }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "id=" + id +
+                ", requesterId=" + requesterId +
+                ", recipientId=" + recipientId +
+                ", recipientEmailOrPhone='" + recipientEmailOrPhone + '\'' +
+                ", amount=" + amount +
+                ", totalAmount=" + totalAmount +
+                ", memo='" + memo + '\'' +
+                ", status='" + status + '\'' +
+                ", initiatedAt=" + initiatedAt +
+                ", completedAt=" + completedAt +
+                '}';
+    }
 }
