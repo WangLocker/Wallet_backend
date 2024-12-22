@@ -9,9 +9,9 @@ import java.util.List;
 @Mapper
 public interface RequestMapper {
 
-    @Insert("INSERT INTO requests (id, requester_id, recipient_id, recipient_email_or_phone, amount, total_amount, memo, status) VALUES (#{id}, #{requesterId}, #{recipientId}, #{recipientEmailOrPhone}, #{amount}, #{totalAmount}, #{memo}, #{status})")
+    @Insert("INSERT INTO requests (requester_id, recipient_id, recipient_email_or_phone, amount, total_amount, memo, status) VALUES (#{requesterId}, #{recipientId}, #{recipientEmailOrPhone}, #{amount}, #{totalAmount}, #{memo}, #{status})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertRequest(Request request);
-//    @Options(useGeneratedKeys = true, keyProperty = "id")
 
 
     @Select("SELECT * FROM requests WHERE requester_id = #{requesterId}")

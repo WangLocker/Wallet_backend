@@ -49,8 +49,7 @@ CREATE TABLE IF NOT EXISTS payments (
 
 
 CREATE TABLE IF NOT EXISTS requests (
---    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    id INTEGER,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     requester_id INTEGER NOT NULL,
     recipient_id INTEGER,
     recipient_email_or_phone TEXT CHECK (length(recipient_email_or_phone) <= 100),
