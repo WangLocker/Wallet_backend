@@ -54,7 +54,7 @@ public class RequestService {
         payment.setRecipientEmailOrPhone(recipientEmailOrPhone);
         payment.setRecipientType(recipientType);
         payment.setMemo(memo);
-        payment.setStatus("pending");
+        payment.setStatus("completed");
         paymentMapper.insertPayment(payment);
 
         Map payOutForm = new HashMap();
