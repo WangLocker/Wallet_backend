@@ -99,7 +99,7 @@ public class AuthController {
      */
     @CrossOrigin(origins =  "*")
     @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
+    public ResponseEntity<?> logout(@RequestBody String userName) {
         return ResponseEntity.ok("Logout successful!");
     }
 
