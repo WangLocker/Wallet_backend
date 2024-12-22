@@ -22,7 +22,7 @@ public class RequestController {
     public ResponseEntity<?> paySubmit(@RequestBody Map<?, ?> submitData) {
         String userName = (String) submitData.get("username");
         Map<?, ?> payForm = (Map<?, ?>) submitData.get("payForm");
-        String infoPayee = (String) payForm.get("inforPayee");
+        String infoPayee = (String) payForm.get("infoPayee");
         String payeeType = (String) payForm.get("payeeType");
         Double amount = Double.parseDouble((String) payForm.get("amount"));
         String memo = (String) payForm.get("memo");
