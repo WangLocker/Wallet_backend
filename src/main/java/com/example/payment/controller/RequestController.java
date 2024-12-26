@@ -24,8 +24,9 @@ public class RequestController {
         String infoPayee = (String) payForm.get("infoPayee");
         String payeeType = (String) payForm.get("payeeType");
         Double amount = Double.parseDouble((String) payForm.get("amount"));
+        String payCard = (String) payForm.get("paycard");
         String memo = (String) payForm.get("memo");
-        Map ret = requestService.paymentCheckAndInsert(userName, infoPayee, payeeType, amount, memo);
+        Map ret = requestService.paymentCheckAndInsert(userName, infoPayee, payeeType, amount, payCard, memo);
         if (ret == null) {
             return ResponseEntity.status(201).body("error");
 //        } else if (ret == -2) {
@@ -52,14 +53,20 @@ public class RequestController {
     @CrossOrigin(origins = "*")
     @PostMapping("/handleTrans")
     public ResponseEntity<?> handleTrans(@RequestBody Map<?, ?> form) {
-        String userName = (String) form.get("User");
+        String cardNumber = (String) form.get("Card");
         Map<?, ?> transForm = (Map<?, ?>) form.get("Trans");
         String transId = (String) transForm.get("t_id");
-        String requesterId = (String) transForm.get("t_requester_id");
-        String recipientId = (String) transForm.get("t_recipient_id");
-        int result = requestService.handleRequest(Integer.parseInt(transId), requesterId, recipientId);
-        if (result == 0) return ResponseEntity.ok("success");
-        else return ResponseEntity.status(201).body("error");
+        String transType = (String) transForm.get("t_type");
+        if (transType.equals("payment")) {
+            int result = requestService.handlePayment(Integer.parseInt(transId), cardNumber);
+            if (result == 0) return ResponseEntity.ok("success");
+            else return ResponseEntity.status(201).body("error");
+        } else if (transType.equals("request")) {
+            int result = requestService.handleRequest(Integer.parseInt(transId), cardNumber);
+            if (result == 0) return ResponseEntity.ok("success");
+            else return ResponseEntity.status(201).body("error");
+        } else return ResponseEntity.status(201).body("transfer type error");
+
     }
 
     @CrossOrigin(origins = "*")

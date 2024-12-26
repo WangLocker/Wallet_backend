@@ -14,6 +14,8 @@ public class Payment {
     private Date initiatedAt;
     private Date completedAt;
     private String cancellationReason;
+    private String senderAccountNumber;
+    private String recipientAccountNumber;
 
     public Integer getId() {
         return id;
@@ -101,5 +103,21 @@ public class Payment {
 
     public void setCancellationReason(String cancellationReason) {
         this.cancellationReason = cancellationReason;
+    }
+
+    public String getSenderAccountNumber() {
+        return senderAccountNumber;
+    }
+
+    public String getRecipientAccountNumber() {
+        return recipientAccountNumber;
+    }
+
+    public void setSenderAccountNumber(String senderAccountNumber) {
+        this.senderAccountNumber = senderAccountNumber;
+    }
+
+    public void setRecipientAccountNumber(String recipientAccountNumber) {
+        this.recipientAccountNumber = recipientAccountNumber;
     }
 }

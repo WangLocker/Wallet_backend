@@ -119,15 +119,16 @@ public class QueryService {
         return transactions;
     }
 
-    public List<Map<String, String>> getPendingRequests(Integer userId) {
+    public List<Map<String, String>> getPendingRequestsAndPayments(Integer userId) {
         List<Map<String, String>> pendingRequests = new ArrayList<>();
 
-        List<Request> recipientList = requestMapper.getRequestsOfRecipient(userId);
-        List<Request> requesterList = requestMapper.getRequestsOfRequester(userId);
-        for (Request request : recipientList) {
+        List<Request> requestsList = requestMapper.getRequestsOfRecipient(userId);
+        List<Payment> paymentsList = paymentMapper.getPaymentsOfRecipient(userId);
+        for (Request request : requestsList) {
             if (request.getStatus().equals("pending")) {
                 Map<String, String> tempTrans = new HashMap<>();
                 tempTrans.put("t_id", String.valueOf(request.getId()));
+                tempTrans.put("t_type", "request");
                 tempTrans.put("t_requester_id", String.valueOf(userMapper.getUserById(request.getRequesterId()).getName()));
                 tempTrans.put("t_recipient_id", String.valueOf(userMapper.getUserById(request.getRecipientId()).getName()));
                 tempTrans.put("t_amount", String.valueOf(request.getAmount()));
@@ -135,17 +136,16 @@ public class QueryService {
                 pendingRequests.add(tempTrans);
             }
         }
-//        for (Request request : requesterList) {
-//            if (request.getStatus().equals("pending")) {
-//                Map<String, String> tempTrans = new HashMap<>();
-//                tempTrans.put("t_id", String.valueOf(request.getId()));
-//                tempTrans.put("t_requester_id", String.valueOf(userMapper.getUserById(request.getRequesterId()).getName()));
-//                tempTrans.put("t_recipient_id", String.valueOf(userMapper.getUserById(request.getRecipientId()).getName()));
-//                tempTrans.put("t_amount", String.valueOf(request.getAmount()));
-//                tempTrans.put("t_memo", String.valueOf(request.getMemo()));
-//                pendingRequests.add(tempTrans);
-//            }
-//        }
+        for (Payment payment : paymentsList) {
+            Map<String, String> tempTrans = new HashMap<>();
+            tempTrans.put("t_id", String.valueOf(payment.getId()));
+            tempTrans.put("t_type", "payment");
+            tempTrans.put("t_requester_id", String.valueOf(userMapper.getUserById(payment.getSenderId()).getName()));
+            tempTrans.put("t_recipient_id", String.valueOf(userMapper.getUserById(payment.getRecipientId()).getName()));
+            tempTrans.put("t_amount", String.valueOf(payment.getAmount()));
+            tempTrans.put("t_memo", String.valueOf(payment.getMemo()));
+            pendingRequests.add(tempTrans);
+        }
         return pendingRequests;
     }
 
@@ -159,17 +159,21 @@ public class QueryService {
             Payment payment = paymentMapper.getPaymentOfId(transId);
             if (payment == null) return null;
             queryForm.put("q_sender", userMapper.getUserById(payment.getSenderId()).getName());
+            queryForm.put("q_sender_card", payment.getSenderAccountNumber() == null ? "" : payment.getSenderAccountNumber());
             queryForm.put("q_receiver", userMapper.getUserById(payment.getRecipientId()).getName());
+            queryForm.put("q_receiver_card", payment.getRecipientAccountNumber() == null ? "" : payment.getRecipientAccountNumber());
             queryForm.put("q_amount", String.valueOf(payment.getAmount()));
             queryForm.put("q_memo", payment.getMemo());
             queryForm.put("q_status", payment.getStatus());
             queryForm.put("q_initiated_at", payment.getInitiatedAt().toString());
-            queryForm.put("q_completed_at", payment.getCompletedAt().toString());
+            queryForm.put("q_completed_at", payment.getCompletedAt() == null ? "" : payment.getCompletedAt().toString());
         } else {
             Request request = requestMapper.getRequestOfId(transId);
             if (request == null) return null;
             queryForm.put("q_sender", userMapper.getUserById(request.getRequesterId()).getName());
+            queryForm.put("q_sender_card", request.getRequesterAccountNumber() == null ? "" : request.getRequesterAccountNumber());
             queryForm.put("q_receiver", userMapper.getUserById(request.getRecipientId()).getName());
+            queryForm.put("q_receiver_card", request.getRecipientAccountNumber() == null ? "" : request.getRecipientAccountNumber());
             queryForm.put("q_amount", String.valueOf(request.getAmount()));
             queryForm.put("q_memo", request.getMemo());
             queryForm.put("q_status", request.getStatus());

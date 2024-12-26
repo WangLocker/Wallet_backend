@@ -9,10 +9,9 @@ import java.util.List;
 @Mapper
 public interface RequestMapper {
 
-    @Insert("INSERT INTO requests (requester_id, recipient_id, recipient_email_or_phone, amount, total_amount, memo, status) VALUES (#{requesterId}, #{recipientId}, #{recipientEmailOrPhone}, #{amount}, #{totalAmount}, #{memo}, #{status})")
+    @Insert("INSERT INTO requests (requester_id, recipient_id, recipient_email_or_phone, amount, total_amount, requester_account_number, memo, status) VALUES (#{requesterId}, #{recipientId}, #{recipientEmailOrPhone}, #{amount}, #{totalAmount}, #{requesterAccountNumber}, #{memo}, #{status})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertRequest(Request request);
-
 
     @Select("SELECT * FROM requests WHERE requester_id = #{requesterId}")
     List<Request> getRequestsOfRequester(Integer requesterId);
@@ -23,7 +22,7 @@ public interface RequestMapper {
     @Select("SELECT * FROM requests WHERE id = #{id}")
     Request getRequestOfId(Integer id);
 
-    @Update("UPDATE requests SET status = 'completed', completed_at = CURRENT_TIMESTAMP WHERE id = #{id} AND requester_id = #{requesterId} AND recipient_id = #{recipientId}")
-    void completeRequest(Integer id, Integer requesterId, Integer recipientId);
+    @Update("UPDATE requests SET status = 'completed', completed_at = CURRENT_TIMESTAMP, recipient_account_number = #{recipientAccountNumber} WHERE id = #{id}")
+    void completeRequest(Integer id, String recipientAccountNumber);
 
 }

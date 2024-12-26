@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS payments (
     memo TEXT,
     status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('completed', 'cancelled', 'pending')),
     initiated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    completed_at DATETIME,
     cancellation_reason TEXT,
     FOREIGN KEY (sender_id) REFERENCES users(id),
     FOREIGN KEY (recipient_id) REFERENCES users(id)
