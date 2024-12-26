@@ -176,7 +176,7 @@ public class RequestService {
         request.setMemo((String) fetchForm.get("memo"));
         request.setStatus("pending");
         request.setInitiatedAt(new Date());
-        request.setRequesterAccountNumber((String) fetchForm.get("fetchCard"));
+        request.setRequesterAccountNumber((String) fetchForm.get("fetchcard"));
 
         System.out.println(request.toString());
         requestMapper.insertRequest(request);
