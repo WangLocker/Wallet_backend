@@ -137,14 +137,16 @@ public class QueryService {
             }
         }
         for (Payment payment : paymentsList) {
-            Map<String, String> tempTrans = new HashMap<>();
-            tempTrans.put("t_id", String.valueOf(payment.getId()));
-            tempTrans.put("t_type", "payment");
-            tempTrans.put("t_requester_id", String.valueOf(userMapper.getUserById(payment.getSenderId()).getName()));
-            tempTrans.put("t_recipient_id", String.valueOf(userMapper.getUserById(payment.getRecipientId()).getName()));
-            tempTrans.put("t_amount", String.valueOf(payment.getAmount()));
-            tempTrans.put("t_memo", String.valueOf(payment.getMemo()));
-            pendingRequests.add(tempTrans);
+            if (payment.getStatus().equals("pending")) {
+                Map<String, String> tempTrans = new HashMap<>();
+                tempTrans.put("t_id", String.valueOf(payment.getId()));
+                tempTrans.put("t_type", "payment");
+                tempTrans.put("t_requester_id", String.valueOf(userMapper.getUserById(payment.getSenderId()).getName()));
+                tempTrans.put("t_recipient_id", String.valueOf(userMapper.getUserById(payment.getRecipientId()).getName()));
+                tempTrans.put("t_amount", String.valueOf(payment.getAmount()));
+                tempTrans.put("t_memo", String.valueOf(payment.getMemo()));
+                pendingRequests.add(tempTrans);
+            }
         }
         return pendingRequests;
     }
