@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS bank_accounts (
     account_number TEXT NOT NULL UNIQUE,
     is_verified BOOLEAN DEFAULT 0,
     is_primary BOOLEAN DEFAULT 0,
+    money REAL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
@@ -38,6 +39,8 @@ CREATE TABLE IF NOT EXISTS payments (
     recipient_email_or_phone TEXT CHECK (length(recipient_email_or_phone) <= 100),
     recipient_type TEXT CHECK (recipient_type IN ('email', 'phone')),
     amount REAL NOT NULL CHECK (amount > 0),
+    sender_account_number TEXT,
+    recipient_account_number TEXT,
     memo TEXT,
     status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('completed', 'cancelled', 'pending')),
     initiated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -55,6 +58,8 @@ CREATE TABLE IF NOT EXISTS requests (
     recipient_email_or_phone TEXT CHECK (length(recipient_email_or_phone) <= 100),
     amount REAL NOT NULL CHECK (amount > 0),
     total_amount REAL NOT NULL CHECK (total_amount > 0),
+    requester_account_number TEXT,
+    recipient_account_number TEXT,
     memo TEXT,
     status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'cancelled')),
     initiated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
