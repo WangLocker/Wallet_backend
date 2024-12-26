@@ -33,10 +33,11 @@ public class QueryController {
         List list = new ArrayList();
         for (Account account : cardList) {
             if (account.getPrimary()) {
-                Map<String, Object> mainCard = new HashMap<>();
+                Map mainCard = new HashMap<>();
                 mainCard.put("card_prio", 0);
                 mainCard.put("card_num", account.getAccountNumber());
                 mainCard.put("card_status", account.getVerified() ? 0 : 1);
+                mainCard.put("money", account.getMoney());
                 list.add(mainCard);
                 break;
             }
@@ -44,12 +45,13 @@ public class QueryController {
         if (list.isEmpty()) {
             return ResponseEntity.status(201).body("No main card");
         }
-        List<Map<String, String>> tableList = new ArrayList();
+        List<Map> tableList = new ArrayList();
         for (Account account : cardList) {
-            Map<String, String> tempMap = new HashMap<>();
+            Map tempMap = new HashMap<>();
             tempMap.put("card_num", account.getAccountNumber());
             tempMap.put("status", account.getVerified() ? "状态正常" : "点此验证");
             tempMap.put("bank", account.getBankId());
+            tempMap.put("money", account.getMoney());
             tableList.add(tempMap);
         }
         list.add(tableList);
@@ -94,7 +96,7 @@ public class QueryController {
         userName = userName.substring(1, userName.length() - 1);
         Integer userId = queryService.getUserId(userName);
         if (userId == null) return ResponseEntity.status(202).body("No such user");
-        List<Map<String, String>> result = queryService.getPendingRequests(userId);
+        List<Map<String, String>> result = queryService.getPendingRequestsAndPayments(userId);
         return ResponseEntity.ok(result);
     }
 

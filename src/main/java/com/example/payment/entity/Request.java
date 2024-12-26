@@ -13,6 +13,8 @@ public class Request {
     private String status;
     private Date initiatedAt;
     private Date completedAt;
+    private String requesterAccountNumber;
+    private String recipientAccountNumber;
 
     public Request() {
         this.status = "pending";
@@ -97,6 +99,22 @@ public class Request {
 
     public void setCompletedAt(Date completedAt) {
         this.completedAt = completedAt;
+    }
+
+    public String getRequesterAccountNumber() {
+        return requesterAccountNumber;
+    }
+
+    public String getRecipientAccountNumber() {
+        return recipientAccountNumber;
+    }
+
+    public void setRequesterAccountNumber(String requesterAccountNumber) {
+        this.requesterAccountNumber = requesterAccountNumber;
+    }
+
+    public void setRecipientAccountNumber(String recipientAccountNumber) {
+        this.recipientAccountNumber = recipientAccountNumber;
     }
 
     @Override

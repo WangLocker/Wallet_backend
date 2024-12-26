@@ -1,17 +1,14 @@
 package com.example.payment.mapper;
 
 import com.example.payment.entity.Payment;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
 public interface PaymentMapper {
 
-    @Insert("INSERT INTO payments (sender_id, recipient_id, recipient_email_or_phone, recipient_type, amount, memo, status, cancellation_reason) VALUES (#{senderId}, #{recipientId}, #{recipientEmailOrPhone}, #{recipientType}, #{amount}, #{memo}, #{status}, #{cancellationReason})")
+    @Insert("INSERT INTO payments (sender_id, recipient_id, recipient_email_or_phone, recipient_type, amount, sender_account_number, memo, status, cancellation_reason) VALUES (#{senderId}, #{recipientId}, #{recipientEmailOrPhone}, #{recipientType}, #{amount}, #{senderAccountNumber}, #{memo}, #{status}, #{cancellationReason})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertPayment(Payment payment);
 
@@ -23,6 +20,9 @@ public interface PaymentMapper {
 
     @Select("SELECT * FROM payments WHERE id = #{id}")
     Payment getPaymentOfId(Integer id);
+
+    @Update("Update payments SET recipient_account_number = #{recipientAccountNumber}, completed_at = CURRENT_TIMESTAMP, status = 'completed' WHERE id = #{id}")
+    void completePayment(Integer id, String recipientAccountNumber);
 
 
 

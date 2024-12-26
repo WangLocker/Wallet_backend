@@ -27,7 +27,7 @@ public class RequestService {
     }
 
 
-    public Map paymentCheckAndInsert(String senderName, String recipientEmailOrPhone, String recipientType, Double amount, String memo) {
+    public Map paymentCheckAndInsert(String senderName, String recipientEmailOrPhone, String recipientType, Double amount, String payCard, String memo) {
 
         if (userMapper.getUserByName(senderName) == null) {
             return null; // sender not found
@@ -47,14 +47,23 @@ public class RequestService {
         }
         if (recipientId == -1) return null;
         if (amount < 0) return null; // invalid payment amount
+
+        Account account = accountMapper.getAccountByAccountNumber(payCard);
+        if (account.getMoney() < amount) return null; // no enough money
+        else {
+            account.setMoney(account.getMoney() - amount);
+            accountMapper.updateMoney(payCard, account.getMoney());
+        }
+
         Payment payment = new Payment();
         payment.setAmount(amount);
         payment.setSenderId(senderId);
+        payment.setSenderAccountNumber(payCard);
         payment.setRecipientId(recipientId);
         payment.setRecipientEmailOrPhone(recipientEmailOrPhone);
         payment.setRecipientType(recipientType);
         payment.setMemo(memo);
-        payment.setStatus("completed");
+        payment.setStatus("pending");
         paymentMapper.insertPayment(payment);
 
         Map payOutForm = new HashMap();
@@ -89,16 +98,39 @@ public class RequestService {
         return 0;
     }
 
-    public int handleRequest(Integer requestId, String requesterName, String recipientName) {
+    public int handleRequest(Integer requestId, String cardNumber) {
         Request request = requestMapper.getRequestOfId(requestId);
         if (request == null) return -1;
-        User requester = userMapper.getUserByName(requesterName);
-        if (requester == null) return -2;
-        User recipient = userMapper.getUserByName(recipientName);
-        if (recipient == null) return -3;
-        Integer recipientId = recipient.getId();
-        Integer requesterId = requester.getId();
-        requestMapper.completeRequest(requestId, requesterId, recipientId);
+
+        String requesterAccountNumber = request.getRequesterAccountNumber();
+        Account requesterAccount = accountMapper.getAccountByAccountNumber(requesterAccountNumber);
+        if (requesterAccount == null) return -2;
+
+        Account recipientAccount = accountMapper.getAccountByAccountNumber(cardNumber);
+        if (recipientAccount == null) return -3;
+        if (recipientAccount.getMoney() < request.getAmount()) return -4;
+
+        recipientAccount.setMoney(recipientAccount.getMoney() - request.getAmount());
+        accountMapper.updateMoney(recipientAccount.getAccountNumber(), recipientAccount.getMoney());
+
+        requesterAccount.setMoney(requesterAccount.getMoney() + request.getAmount());
+        accountMapper.updateMoney(requesterAccountNumber, requesterAccount.getMoney());
+
+        requestMapper.completeRequest(requestId, recipientAccount.getAccountNumber());
+        return 0;
+    }
+
+    public int handlePayment(Integer paymentId, String cardNumber) {
+        Payment payment = paymentMapper.getPaymentOfId(paymentId);
+        if (payment == null) return -1;
+
+        Account recipientAccount = accountMapper.getAccountByAccountNumber(cardNumber);
+        if (recipientAccount == null) return -2;
+
+        recipientAccount.setMoney(recipientAccount.getMoney() + payment.getAmount());
+        accountMapper.updateMoney(recipientAccount.getAccountNumber(), recipientAccount.getMoney());
+
+        paymentMapper.completePayment(paymentId, cardNumber);
         return 0;
     }
 
@@ -143,6 +175,7 @@ public class RequestService {
         request.setMemo((String) fetchForm.get("memo"));
         request.setStatus("pending");
         request.setInitiatedAt(new Date());
+        request.setRequesterAccountNumber((String) fetchForm.get("fetchCard"));
 
         System.out.println(request.toString());
         requestMapper.insertRequest(request);
