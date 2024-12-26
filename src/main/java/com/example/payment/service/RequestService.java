@@ -89,6 +89,7 @@ public class RequestService {
         Account account = new Account();
         account.setVerified(false);
         account.setAccountNumber(accountNum);
+        account.setMoney(1000.0);
         account.setBankId(bankId);
         account.setUserId(userId);
         List<Account> accounts = accountMapper.getAccountsByUserId(userId);
