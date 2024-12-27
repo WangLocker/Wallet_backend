@@ -120,4 +120,11 @@ public class Payment {
     public void setRecipientAccountNumber(String recipientAccountNumber) {
         this.recipientAccountNumber = recipientAccountNumber;
     }
+
+    public String toSearchString() {
+        return id + "," + senderId + "," + recipientId + "," + recipientEmailOrPhone +
+                "," + recipientType + "," + amount + "," + memo + "," + status +
+                "," + initiatedAt + "," + completedAt + "," + cancellationReason +
+                "," + senderAccountNumber + "," + recipientAccountNumber;
+    }
 }

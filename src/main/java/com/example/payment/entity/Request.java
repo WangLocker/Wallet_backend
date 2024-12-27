@@ -132,4 +132,11 @@ public class Request {
                 ", completedAt=" + completedAt +
                 '}';
     }
+
+    public String toSearchString() {
+        return id + "," + requesterId + "," + recipientId + "," + recipientEmailOrPhone +
+                "," + amount + "," + totalAmount + "," + memo + "," + status +
+                "," + initiatedAt + "," + completedAt + "," + requesterAccountNumber +
+                "," + recipientAccountNumber;
+    }
 }
