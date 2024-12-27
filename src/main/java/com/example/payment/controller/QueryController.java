@@ -1,6 +1,7 @@
 package com.example.payment.controller;
 
 import com.example.payment.entity.Account;
+import com.example.payment.entity.Payment;
 import com.example.payment.entity.User;
 import com.example.payment.service.QueryService;
 import org.springframework.http.RequestEntity;
@@ -110,7 +111,22 @@ public class QueryController {
     }
 
 
+    @CrossOrigin(origins = "*")
+    @PostMapping("/search_trans")
+    public ResponseEntity<?> searchTrans(@RequestBody Map<?, ?> info) {
+        String userName = (String) info.get("username");
+        Map map = (Map) info.get("searchForm");
+        String keyword = (String) map.get("keyword");
+        String startDate = (String) map.get("startDate");
+        String endDate = (String) map.get("endDate");
 
+        if (startDate.isEmpty() && (!endDate.isEmpty())) return ResponseEntity.status(202).body("no start date");
+        if (endDate.isEmpty() && (!startDate.isEmpty())) return ResponseEntity.status(202).body("no end date");
+
+        Map<String, String> result = queryService.searchTrans(userName, keyword, startDate, endDate);
+        if (result == null) return ResponseEntity.status(201).body("Error");
+        else return ResponseEntity.ok(result);
+    }
 
 
 

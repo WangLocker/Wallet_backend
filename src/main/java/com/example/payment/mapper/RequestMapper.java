@@ -25,4 +25,7 @@ public interface RequestMapper {
     @Update("UPDATE requests SET status = 'completed', completed_at = CURRENT_TIMESTAMP, recipient_account_number = #{recipientAccountNumber} WHERE id = #{id}")
     void completeRequest(Integer id, String recipientAccountNumber);
 
+    @Select("SELECT * FROM requests WHERE recipient_id = #{userId} OR requester_id = #{userId}")
+    List<Request> getRequestOfUser(Integer userId);
+
 }

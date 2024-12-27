@@ -24,6 +24,7 @@ public interface PaymentMapper {
     @Update("Update payments SET recipient_account_number = #{recipientAccountNumber}, completed_at = CURRENT_TIMESTAMP, status = 'completed' WHERE id = #{id}")
     void completePayment(Integer id, String recipientAccountNumber);
 
-
+    @Select("SELECT * FROM payments WHERE recipient_id = #{userId} OR sender_id = #{userId}")
+    List<Payment> getPaymentOfUser(Integer userId);
 
 }

@@ -4,6 +4,7 @@ import com.example.payment.entity.*;
 import com.example.payment.mapper.*;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
 import java.util.*;
 
 @Service
@@ -185,6 +186,67 @@ public class QueryService {
         return queryForm;
     }
 
+    public Map<String, String> searchTrans(String userName, String keyword, String startDate, String endDate) {
+        User user = userMapper.getUserByName(userName);
+        if (user == null) return null;
+        Integer userId = user.getId();
+
+        List<Payment> payments = paymentMapper.getPaymentOfUser(userId);
+        List<Request> requests = requestMapper.getRequestOfUser(userId);
+
+        boolean hasDate = (!startDate.isEmpty());
+        boolean hasKeyword = (!keyword.isEmpty());
+
+        Date start = new Date();
+        Date end = new Date();
+
+        if (hasDate) {
+            start = new Date(startDate);
+            end = new Date(endDate);
+        }
+
+        Map<String, String> result = new HashMap<>();
+
+        for (Payment payment : payments) {
+            if (hasKeyword && (!payment.toSearchString().contains(keyword))) continue;
+            if (hasDate) {
+                boolean checkOk = false;
+                if (payment.getInitiatedAt().compareTo(start) >= 0 && payment.getInitiatedAt().compareTo(end) <= 0) checkOk = true;
+                if (payment.getStatus().equals("completed") && payment.getCompletedAt().compareTo(start) >= 0 && payment.getCompletedAt().compareTo(end) <= 0) checkOk = true;
+                if (!checkOk) continue;
+            }
+            result.put("trans_id", payment.getId().toString());
+            result.put("senderId", userMapper.getUserById(payment.getSenderId()).getName());
+            result.put("receiverId", userMapper.getUserById(payment.getRecipientId()).getName());
+            result.put("type", "payment");
+            result.put("amount", payment.getAmount().toString());
+            result.put("memo", payment.getMemo());
+            result.put("status", payment.getStatus());
+            result.put("startTime", payment.getInitiatedAt().toString());
+            result.put("endTime", payment.getCompletedAt() == null ? "" : payment.getCompletedAt().toString());
+        }
+
+        for (Request request : requests) {
+            if (hasKeyword && (!request.toSearchString().contains(keyword))) continue;
+            if (hasDate) {
+                boolean checkOk = false;
+                if (request.getInitiatedAt().compareTo(start) >= 0 && request.getInitiatedAt().compareTo(end) <= 0) checkOk = true;
+                if (request.getStatus().equals("completed") && request.getCompletedAt().compareTo(start) >= 0 && request.getCompletedAt().compareTo(end) <= 0) checkOk = true;
+                if (!checkOk) continue;
+            }
+            result.put("trans_id", request.getId().toString());
+            result.put("senderId", userMapper.getUserById(request.getRequesterId()).getName());
+            result.put("receiverId", userMapper.getUserById(request.getRecipientId()).getName());
+            result.put("type", "request");
+            result.put("amount", request.getAmount().toString());
+            result.put("memo", request.getMemo());
+            result.put("status", request.getStatus());
+            result.put("startTime", request.getInitiatedAt().toString());
+            result.put("endTime", request.getCompletedAt() == null ? "" : request.getCompletedAt().toString());
+        }
+
+        return result;
+    }
 
 
 }
